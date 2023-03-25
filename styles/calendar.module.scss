@@ -1,0 +1,31 @@
+.container {
+    background: rgba(0,0,0,0.2);
+    padding: 3em;
+    margin: 2em;
+    border-radius: 20px;
+
+    .calendarwrapeer {
+        padding: 1em 0;
+
+        & .weeklabel{
+            display: grid;
+            place-items: center;
+            grid-template-columns: repeat(7, 30px);
+            margin-bottom: 0.25em;
+            gap: 1em;
+        }
+        
+        & .calendar {
+            display: grid;
+            place-items: center;
+            grid-template-columns: repeat(7, 30px);
+            grid-template-rows: repeat(5, 30px);
+            gap: 1em;
+        }
+    }
+    & .YearAndMonth {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+}

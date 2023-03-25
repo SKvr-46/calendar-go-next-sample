@@ -1,0 +1,18 @@
+.btn {
+    border: none;
+    background: transparent;
+    font-size: 2em;
+    font-weight: bold;
+    transition: all 0.4s;
+    height: 100%;
+    width: 100%;
+    padding: 3em 0.25em;
+    border: 1px solid transparent;
+    border-radius: 10px;
+
+    &:hover{
+        cursor: pointer;
+        color: gray;
+        border: 1px solid gray;
+    }
+}
