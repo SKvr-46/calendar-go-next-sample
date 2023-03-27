@@ -37,15 +37,16 @@ export const Calendar = (props : CalendarPropsType) => {
         mutate(updated)
     }
 
-    const deleteSchedule = async (values : {year:number, month:number, date:number}) => {
-        const deleted = await fetch(`${ENDPOINT}/api/schedules/${values.year}/${values.month}/${values.date}/delete`, {
+    const deleteSchedule = async (values : {year:number, month:number, date:number, id:number}) => {
+        const deleted = await fetch(`${ENDPOINT}/api/schedules/${values.year}/${values.month}/${values.date}/${values.id}/delete`, {
             method: 'DELETE',
         }).then((r) => r.json())
+
         console.log(deleted); // レスポンスを出力して確認
         setSchedules(deleted)
+        console.log(schedules,values.year, values.month, values.date, values.id)
         mutate(deleted)
     }
-
 
     const searchDayfromDate = (randomDate: Date) => {
         let dayName = ''
@@ -92,6 +93,7 @@ export const Calendar = (props : CalendarPropsType) => {
                 <div className={styles.weeklabel}>
                     {
                         dayArray.map((day, index) => {
+                            //1,8,15番目などは1列目
                             const col = index % 7 + 1
                             const setColorOfDay = () => {
                                 let color = ''
@@ -120,6 +122,7 @@ export const Calendar = (props : CalendarPropsType) => {
                 </div>
                 <div className={styles.calendar}>
                     {days.map((day, index) => {
+                        //4日は１行4列目、15日は3行1列目になるように
                         const row =  Math.floor(index / 7) + 1
                         const col = index % 7 + 1
                         return (
@@ -148,6 +151,8 @@ export const Calendar = (props : CalendarPropsType) => {
             </div>
             <div className={styles.schedulearea}>
                 {
+                    schedules.length === 0 ?
+                        <p>No schedules</p> :
                     schedules.map((schedule, index) => {
                         return(
                             <li
@@ -164,6 +169,7 @@ export const Calendar = (props : CalendarPropsType) => {
                                     year: schedule.year,
                                     month: schedule.month,
                                     date: schedule.date,
+                                    id:index,
                                     }
                                     )}>
                                 Delete

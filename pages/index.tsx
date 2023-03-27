@@ -9,6 +9,7 @@ export const ENDPOINT = "http://localhost:4000"
 const fetcher = (url:string) => fetch(`${ENDPOINT}/${url}`).then((r) => r.json())
 
 export interface Schedule {
+  id : number
   year: number
   month: number
 	date: number
@@ -22,6 +23,7 @@ const Home = () => {
   const { data, mutate } = useSWR<Schedule[]>("api/schedules", fetcher)
 
   const date = new Date()
+
    //+1で次の月。0で先月の最終日=>今月の最終日を取得 lastDateOfMonth.getMonth()は現在より1つ小さいことに注意。
   const [lastDateOfMonth, setLastDate] = useState(new Date(date.getFullYear(), date.getMonth() + 1, 0))
 

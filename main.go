@@ -7,6 +7,7 @@ import (
 )
 
 type Schedule struct {
+	ID 			int `json:"id"`
 	Year		int `json:"year"`
 	Month		int `json:"month"`
 	Date        int `json:"date"`	
@@ -67,10 +68,11 @@ func main() {
 		return c.JSON(schedules)
 	})
 
-	app.Delete("/api/schedules/:year/:month/:date/delete", func(c *fiber.Ctx) error {
+	app.Delete("/api/schedules/:year/:month/:date/:id/delete", func(c *fiber.Ctx) error {
 		year, year_err := c.ParamsInt("year")
 		month, month_err := c.ParamsInt("month")
 		date, date_err := c.ParamsInt("date")
+		id, id_err := c.ParamsInt("id")
 
 		if year_err != nil {
 			log.Println(year_err)
@@ -84,11 +86,16 @@ func main() {
 			log.Println(date_err)
 			return c.SendString("date param error")
 		}
+		if id_err!= nil {
+			log.Println(id_err)
+            return c.SendString("id param error")
+        }
 
 		//一致する年月日でスケジュールを取得
 		for i, t := range schedules {
-			if t.Year == year && t.Month == month && t.Date == date {
+			if t.Year == year && t.Month == month && t.Date == date && t.ID == id {
 				schedules = append(schedules[:i], schedules[i+1:]...)
+				break
 			} else {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 					"error": "Invalid request payload",
