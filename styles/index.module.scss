@@ -1,6 +1,21 @@
 .homecontainer {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
+
+    & .calendarcontainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    & .addschedulecontainer {
+        display: grid;
+        place-items: center;
+        width: 100%;
+    }
 }

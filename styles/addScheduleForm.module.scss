@@ -1,0 +1,76 @@
+.formcontainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    & form {
+        display: grid;
+        place-items: center;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        background: rgba(37, 119, 196, 0.6);
+        padding: 2em;
+        margin: 2em 0;
+        border-radius: 20px;
+    }
+
+    & .openedbtn {
+        font-size: 32px;
+        width: 2em;
+        height: 2em;
+        border-radius: 50%;
+        transform: rotate(225deg);
+        transition: all 0.4s;
+        border: 5px ridge silver;
+
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    & .closedbtn {
+        font-size: 32px;
+        width: 2em;
+        height: 2em;
+        border-radius: 50%;
+        transition: all 0.4s;
+        border: 5px ridge silver;
+
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    & .closedform {
+        display: none;
+    }
+
+    & .openedform {
+        font-size: 24px;
+        font-weight: bold;
+        gap: 1em;
+
+        & label {
+            background: #6495ED;
+            padding: 0.7em;
+            border-radius: 20px;
+        }
+
+        & .createbutton{
+            background: rgba(37, 119, 196, 0.6);
+            color: #fff;
+            padding: 2em;
+            border-radius: 20px;
+            font-size: 20px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+
+}
