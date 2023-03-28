@@ -44,6 +44,12 @@
         background: gray;
         padding: 1em;
         border-radius: 20px;
+        display: grid;
+        place-items: center;
+
+        & p{
+            font-weight: bold;
+        }
 
         & li {
             list-style: none;

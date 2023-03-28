@@ -64,6 +64,7 @@ func main() {
 				"error": "Invalid request payload",
 			})
 		}
+		schedule.ID = len(schedules) + 1
 		schedules = append(schedules, *schedule)
 		return c.JSON(schedules)
 	})

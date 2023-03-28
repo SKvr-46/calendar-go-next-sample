@@ -43,13 +43,13 @@ export const AddScheduleForm = ({mutate} : {mutate :  KeyedMutator<Schedule[]>})
         form.reset()
     }
 
-    const toggleForm = () => setFormIsOpen(!formIsOpen)
+    const toggleFormIsOpen = () => setFormIsOpen(!formIsOpen)
 
     return (
         <div className={styles.formcontainer}>
             <button 
             className={formIsOpen ? styles.openedbtn : styles.closedbtn}
-            onClick={() => toggleForm()}
+            onClick={() => toggleFormIsOpen()}
             >＋</button>
             <form 
             onSubmit={form.onSubmit(createSchedule)}
@@ -75,7 +75,11 @@ export const AddScheduleForm = ({mutate} : {mutate :  KeyedMutator<Schedule[]>})
                     Content <br/>
                     <textarea {...form.getInputProps("content")} />
                 </label>
-                <button type="submit" className={styles.createbutton}>Create</button>
+                <button 
+                type="submit" 
+                className={styles.createbutton}
+                onClick={() => toggleFormIsOpen()}
+                >Create</button>
             </form>
         </div>
     )

@@ -2,8 +2,9 @@ import { Calendar } from "@/component/calendar"
 import { Button } from "@/component/button"
 import { AddScheduleForm } from "@/component/addScheduleForm"
 import styles from "styles/index.module.scss"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import useSWR from "swr"
+
 
 export const ENDPOINT = "http://localhost:4000"
 const fetcher = (url:string) => fetch(`${ENDPOINT}/${url}`).then((r) => r.json())
@@ -17,10 +18,34 @@ export interface Schedule {
 	content: string
 }
 
+export interface ScheduledDate {
+  year: number
+  month: number
+	date: number
+}
+
 
 const Home = () => {
 
   const { data, mutate } = useSWR<Schedule[]>("api/schedules", fetcher)
+
+  //予定のある年月日を格納する配列
+  const [scheduledDate, setScheduledDate] = useState<ScheduledDate[]>([])
+
+
+
+  //Schedule から年月日の情報のみ取り出し、１つのオブジェクトにする
+  useEffect(() => {
+    if (data && data.length >= 0) {
+      const mappedData = data.map(({ year, month, date }) => ({ year, month, date }))
+      setScheduledDate(mappedData)
+      console.log("data", data)
+      console.log("mapped", mappedData)
+      console.log("scheduledDate", scheduledDate)
+    }
+    console.log(data)
+  }, [data])
+
 
   const date = new Date()
 
@@ -45,6 +70,7 @@ const Home = () => {
       <Calendar
       lastDateOfMonth={lastDateOfMonth}
       mutate={mutate}
+      scheduledDate={scheduledDate}
       />
       <Button
       content={"＞"}

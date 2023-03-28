@@ -1,16 +1,17 @@
 import  styles from "styles/calendar.module.scss"
-import { ENDPOINT, Schedule } from "@/pages"
+import { ENDPOINT, Schedule, ScheduledDate } from "@/pages"
 import { KeyedMutator } from "swr"
 import { useState, useEffect } from "react"
 
 type CalendarPropsType = {
     lastDateOfMonth: Date  //指定した年月日の最終日
     mutate:  KeyedMutator<Schedule[]>
+    scheduledDate: ScheduledDate[]
 }
 
 
 export const Calendar = (props : CalendarPropsType) => {
-    const {lastDateOfMonth, mutate} = props
+    const {lastDateOfMonth, mutate, scheduledDate} = props
 
     const [schedules, setSchedules] = useState<Schedule[]>([])
     const days = [] 
@@ -23,7 +24,7 @@ export const Calendar = (props : CalendarPropsType) => {
     const date = new Date()
     const dayOfMonth = new Date(date.getFullYear(), date.getMonth(), date.getDate())// 日付を取得 (1から31までの数字)
     const month = lastDateOfMonth.getMonth() + 1 // 月を取得 (1から12までの数字)
-    const year = lastDateOfMonth.getFullYear() // 年を取得 (2018から2021までの数字)
+    const year = lastDateOfMonth.getFullYear() // 年を取得
 
 
     const getSchedule = async (values : {year:number, month:number, date:number}) => {
@@ -33,19 +34,19 @@ export const Calendar = (props : CalendarPropsType) => {
 
         console.log(updated); // レスポンスを出力して確認
         console.log(values.year, values.month, values.date)
-        setSchedules(updated)
+        //scheduleに、その日の予定のみ格納し、表示するための設定
+        setSchedules(updated.filter((s:Schedule) => s.year == values.year && s.date === values.date && s.month === values.month))
         mutate(updated)
     }
 
-    const deleteSchedule = async (values : {year:number, month:number, date:number, id:number}) => {
+    const deleteSchedule = async (values: {year:number, month:number, date:number, id:number}) => {
         const deleted = await fetch(`${ENDPOINT}/api/schedules/${values.year}/${values.month}/${values.date}/${values.id}/delete`, {
-            method: 'DELETE',
+        method: 'DELETE',
         }).then((r) => r.json())
-
-        console.log(deleted); // レスポンスを出力して確認
-        setSchedules(deleted)
-        console.log(schedules,values.year, values.month, values.date, values.id)
-        mutate(deleted)
+        //scheduleに、その日の予定のみ格納し、表示するための設定。deleteなので、配列が空になる、つまりundefindの可能性に対応する。
+        const filtered = deleted.filter((s: Schedule | undefined) => s !== undefined)
+        setSchedules(filtered.filter((s: Schedule) => s.year === values.year && s.date === values.date && s.month === values.month))
+        mutate(filtered)
     }
 
     const searchDayfromDate = (randomDate: Date) => {
@@ -130,9 +131,11 @@ export const Calendar = (props : CalendarPropsType) => {
                             <div 
                             key={index} className={styles.day}
                             style={{gridRow: row, gridColumn: col, 
-                                //今日の日付で、月が今のものか？
-                                //dayOfMonth.getMonth() == monthは、propsであるlastDateOfMonthの月と、今の月が同じかの判定。
-                                    color: dayOfMonth.getDate() == day && dayOfMonth.getMonth() == month ? "crimson" : "black"}}
+                                    color: dayOfMonth.getFullYear() == year && dayOfMonth.getMonth()+1 == month && dayOfMonth.getDate() == day ? "crimson" : "black",
+                                    background: scheduledDate.find(({ year: y, month: m, date: d }) => y === lastDateOfMonth.getFullYear() && m === lastDateOfMonth.getMonth() + 1 && d === day) ? "gold" : "transparent",
+                                    borderRadius: "10px",
+                                    padding: "0.2em",
+                                }}
                             >
                                 <a
                                 onClick={() => getSchedule({
@@ -169,7 +172,7 @@ export const Calendar = (props : CalendarPropsType) => {
                                     year: schedule.year,
                                     month: schedule.month,
                                     date: schedule.date,
-                                    id:index,
+                                    id: schedule.id,
                                     }
                                     )}>
                                 Delete
